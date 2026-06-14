@@ -1,0 +1,51 @@
+{
+    "actorSpecification": 1,
+    "name": "lever-job-scraper",
+    "title": "Lever Job Scraper & API",
+    "description": "Scrape Lever ATS jobs via API with department and team filtering. Pull live roles from thousands of Lever-hosted career sites. Built for job boards and AI agents.",
+    "version": "1.0",
+    "license": "MIT",
+    "dockerfile": "./Dockerfile",
+    "readme": "./README.md",
+    "categories": ["JOBS"],
+    "input": "./INPUT_SCHEMA.json",
+    "output": "./output_schema.json",
+    "storages": {
+        "dataset": {
+            "actorSpecification": 1,
+            "title": "Lever Job Listings",
+            "views": {
+                "overview": {
+                    "title": "Overview",
+                    "transformation": {
+                        "fields": [
+                            "title",
+                            "company",
+                            "department",
+                            "team",
+                            "location",
+                            "type",
+                            "salary",
+                            "publishedAt",
+                            "postingUrl"
+                        ]
+                    },
+                    "display": {
+                        "component": "table",
+                        "properties": {
+                            "title": { "label": "Job Title", "format": "text" },
+                            "company": { "label": "Company", "format": "text" },
+                            "department": { "label": "Department", "format": "text" },
+                            "team": { "label": "Team", "format": "text" },
+                            "location": { "label": "Location", "format": "text" },
+                            "type": { "label": "Type", "format": "text" },
+                            "salary": { "label": "Salary", "format": "object" },
+                            "publishedAt": { "label": "Created", "format": "date" },
+                            "postingUrl": { "label": "URL", "format": "link" }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "Lever Job Scraper Output",
+  "description": "Scraped job listings from Lever job boards with enhanced data extraction",
+  "properties": {
+    "jobs": {
+      "type": "string",
+      "title": "Job Listings",
+      "description": "All scraped job postings with departments, teams, salaries, locations, and metadata",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "lever-job-scraper",
+  "version": "1.0.0",
+  "description": "Open source Lever Job Scraper with department, team, and recency filtering",
+  "type": "module",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["apify", "lever", "jobs", "scraper", "ats", "department-filter"],
+  "author": "Damien Alleyne <damien@alleyne.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/d-alleyne/lever-job-scraper.git"
+  },
+  "dependencies": {
+    "apify": "^3.5.3"
+  }
+}

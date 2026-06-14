@@ -1,0 +1,23 @@
+{
+    "title": "Lever Job Scraper Input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "urls": {
+            "title": "Job Board URLs",
+            "type": "array",
+            "description": "Lever job board URLs to scrape. Each entry can be a plain URL string, or an object with a required `url` plus optional per-board filters (use the JSON tab): `departments` (array of department name strings to keep, case-insensitive, filtered before storing), `teams` (array of team name strings), `maxJobs` (integer cap per board), `daysBack` (integer; only jobs created in the last N days). Example: {\"url\": \"https://jobs.lever.co/example\", \"departments\": [\"Engineering\"], \"teams\": [\"Backend\"], \"maxJobs\": 20, \"daysBack\": 7}. Unlike Greenhouse, department and team are plain names, so no ID lookup is needed.",
+            "editor": "requestListSources",
+            "placeholderKey": "url",
+            "placeholderValue": "https://jobs.lever.co/example",
+            "patternKey": "url",
+            "patternValue": "https://jobs(\\.eu)?\\.lever\\.co/.+",
+            "prefill": [
+                {
+                    "url": "https://jobs.lever.co/leverdemo"
+                }
+            ]
+        }
+    },
+    "required": ["urls"]
+}
