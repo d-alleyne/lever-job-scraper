@@ -44,8 +44,8 @@ The headline price is higher. The cost per **relevant** job is typically 5 to 15
 ```json
 {
   "urls": [
-    { "url": "https://jobs.lever.co/example" },
-    { "url": "https://jobs.lever.co/another-company" }
+    { "url": "https://jobs.lever.co/anchorage" },
+    { "url": "https://jobs.lever.co/mistral" }
   ]
 }
 ```
@@ -58,14 +58,14 @@ Each URL can have its own filters:
 {
   "urls": [
     {
-      "url": "https://jobs.lever.co/example",
+      "url": "https://jobs.lever.co/anchorage",
       "departments": ["Engineering"],
-      "teams": ["Backend"],
+      "teams": ["Blockchain"],
       "maxJobs": 20,
       "daysBack": 7
     },
     {
-      "url": "https://jobs.lever.co/another-company",
+      "url": "https://jobs.lever.co/mistral",
       "maxJobs": 10
     }
   ]
@@ -75,7 +75,7 @@ Each URL can have its own filters:
 ### Parameters
 
 - **urls** (required): Array of job board configurations. Each entry can be a plain URL string or an object supporting:
-  - `url` (required): Clean Lever job board URL, e.g. `https://jobs.lever.co/example` (the EU host `jobs.eu.lever.co` also works)
+  - `url` (required): Clean Lever job board URL, e.g. `https://jobs.lever.co/anchorage` (the EU host `jobs.eu.lever.co` also works)
   - `departments` (optional): Array of department name strings to keep (case-insensitive), e.g. `["Engineering", "Product"]`
   - `teams` (optional): Array of team name strings to keep (case-insensitive), e.g. `["Backend"]`
   - `maxJobs` (optional): Maximum number of jobs to store from this board
@@ -85,7 +85,7 @@ Department and team filters combine with AND: a job is kept only if it matches a
 
 ### How to find department and team names
 
-Lever uses plain text names, not IDs, so there is nothing to look up. Open the company's Lever board (e.g. `https://jobs.lever.co/example`), read the department or team label shown on each posting, and use that exact text (case does not matter). You can also list every available value by running the actor once with no filters and inspecting the `department` and `team` fields in the output.
+Lever uses plain text names, not IDs, so there is nothing to look up. Open the company's Lever board (e.g. `https://jobs.lever.co/anchorage`), read the department or team label shown on each posting, and use that exact text (case does not matter). You can also list every available value by running the actor once with no filters and inspecting the `department` and `team` fields in the output.
 
 ### Scheduled Runs
 
@@ -99,7 +99,7 @@ Keeping a board fresh is two parts that work together:
 {
   "urls": [
     {
-      "url": "https://jobs.lever.co/example",
+      "url": "https://jobs.lever.co/anchorage",
       "departments": ["Engineering"],
       "daysBack": 7
     }
@@ -146,8 +146,8 @@ Each job listing includes:
     "team": "Backend"
   },
 
-  "postingUrl": "https://jobs.lever.co/example/abc12345-6789-...",
-  "applyUrl": "https://jobs.lever.co/example/abc12345-6789-.../apply",
+  "postingUrl": "https://jobs.lever.co/anchorage/abc12345-6789-...",
+  "applyUrl": "https://jobs.lever.co/anchorage/abc12345-6789-.../apply",
   "publishedAt": "2026-05-07T01:08:03.000Z"
 }
 ```
@@ -201,7 +201,7 @@ curl -X POST https://api.apify.com/v2/acts/dalleyne~lever-job-scraper/runs \
   -d '{
     "urls": [
       {
-        "url": "https://jobs.lever.co/example",
+        "url": "https://jobs.lever.co/anchorage",
         "departments": ["Engineering"]
       }
     ]
@@ -221,7 +221,7 @@ export APIFY_LOCAL_STORAGE_DIR=./apify_storage
 
 # Create input file
 mkdir -p ./apify_storage/key_value_stores/default
-echo '{"urls":[{"url":"https://jobs.lever.co/leverdemo","departments":["Engineering"]}]}' > ./apify_storage/key_value_stores/default/INPUT.json
+echo '{"urls":[{"url":"https://jobs.lever.co/anchorage","departments":["Engineering"]}]}' > ./apify_storage/key_value_stores/default/INPUT.json
 
 # Run the actor
 npm start
