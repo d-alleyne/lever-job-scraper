@@ -24,7 +24,7 @@ This actor filters by department and team first. A typical mid-size board lists 
 
 | Approach | Jobs stored | Cost per board |
 |----------|------------|----------------|
-| Fetch-everything scraper at $0.99/1,000 | 200 | ~$0.20, plus your own filtering work |
+| Fetch-everything scraper at $1.00/1,000 | 200 | ~$0.20, plus your own filtering work |
 | This scraper at $2.00/1,000 with `departments` set | ~20 | ~$0.04, already clean |
 
 The headline price is higher. The cost per **relevant** job is typically 5 to 15 times lower, and your dataset arrives ready to use.
