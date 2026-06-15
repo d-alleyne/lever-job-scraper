@@ -15,6 +15,13 @@
             "prefill": [
                 {
                     "url": "https://jobs.lever.co/anchorage"
+                },
+                {
+                    "url": "https://jobs.lever.co/anchorage",
+                    "departments": ["Engineering"],
+                    "teams": ["Blockchain"],
+                    "maxJobs": 25,
+                    "daysBack": 30
                 }
             ]
         }
