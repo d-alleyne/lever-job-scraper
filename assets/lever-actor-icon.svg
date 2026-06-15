@@ -1,0 +1,18 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF7A4D"/>
+      <stop offset="1" stop-color="#C73E22"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="256" height="256" rx="52" fill="url(#bg)"/>
+
+  <!-- Lever: a bar balanced on a triangular fulcrum -->
+  <path d="M118 124 L94 162 L142 162 Z" fill="#FFFFFF"/>
+  <line x1="54" y1="152" x2="186" y2="90" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round"/>
+
+  <!-- Magnifying glass (shared scraper motif), bottom-right -->
+  <circle cx="184" cy="180" r="30" fill="#5E1A0E"/>
+  <circle cx="184" cy="180" r="30" fill="none" stroke="#FFFFFF" stroke-width="16"/>
+  <line x1="205" y1="201" x2="227" y2="223" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round"/>
+</svg>
