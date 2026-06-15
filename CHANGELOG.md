@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+- Add an actor icon (lever motif, matching the Greenhouse and Ashby scrapers).
+- Prefill now includes a full-feature example object (`departments`, `teams`, `maxJobs`, `daysBack`) so you can copy and adjust it without reading the README.
+- Use real example boards (Anchorage, Mistral) in the README and input schema.
+
 ## 1.0.0
 
 - Initial release.
