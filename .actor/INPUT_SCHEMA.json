@@ -14,7 +14,7 @@
             "patternValue": "https://jobs(\\.eu)?\\.lever\\.co/.+",
             "prefill": [
                 {
-                    "url": "https://jobs.lever.co/anchorage"
+                    "url": "https://jobs.lever.co/mistral"
                 },
                 {
                     "url": "https://jobs.lever.co/anchorage",
