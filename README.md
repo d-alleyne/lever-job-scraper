@@ -135,6 +135,7 @@ Each job listing includes:
     "interval": "per-year-salary",
     "raw": "USD120000-160000"
   },
+  "salaryDescription": "Compensation is market-driven and data-informed...",
 
   "department": "Engineering",
   "team": "Backend",
@@ -162,7 +163,8 @@ Each job listing includes:
 - `locations` (array) - All locations Lever lists for the posting
 - `workplaceType` (string) - Lever's own value: `remote`, `on-site`, `hybrid`, or `unspecified`
 - `isRemote` / `isHybrid` (boolean) - Derived from `workplaceType` and location text
-- `salary` (object|null) - Lever's structured `salaryRange` when present, otherwise a regex extraction from the description
+- `salary` (object|null) - Lever's structured `salaryRange` when present, otherwise a regex extraction from the salary blurb or description
+- `salaryDescription` (string|null) - Lever's free-text compensation field (`salaryDescriptionPlain`), preserved verbatim. Useful for salary-transparency listings where the company posts a narrative rather than a clean range
 - `country` (string|null) - Country code Lever associates with the posting
 
 **For LLM enhancement** (recommended downstream post-processing):

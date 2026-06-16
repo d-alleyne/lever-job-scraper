@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+- Capture Lever's free-text compensation field as `salaryDescription` (`salaryDescriptionPlain`), preserved verbatim for salary-transparency listings.
+- Improve salary parsing: when there is no structured `salaryRange`, the regex now reads the dedicated salary blurb before the full job description.
+
 ## 1.0.1
 
 - Add an actor icon (lever motif, matching the Greenhouse and Ashby scrapers).

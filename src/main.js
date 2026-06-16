@@ -94,7 +94,8 @@ function extractSalary(posting) {
             raw: `${sr.currency || ''}${sr.min ?? ''}-${sr.max ?? ''}`.trim(),
         };
     }
-    return parseSalaryFromText(posting.descriptionPlain || posting.description || '');
+    // No structured range: parse the dedicated salary blurb first, then the description.
+    return parseSalaryFromText(posting.salaryDescriptionPlain || posting.descriptionPlain || posting.description || '');
 }
 
 /**
@@ -131,6 +132,7 @@ function formatJobOutput(posting, site) {
         isHybrid,
 
         salary: extractSalary(posting),
+        salaryDescription: posting.salaryDescriptionPlain || null,
 
         department: categories.department || null,
         team: categories.team || null,
