@@ -20,12 +20,22 @@ function extractCompanyName(url) {
  */
 async function fetchPostings(site) {
     const apiUrl = `https://api.lever.co/v0/postings/${site}?mode=json`;
-    const response = await fetch(apiUrl, { headers: { Accept: 'application/json' } });
+    const response = await fetch(apiUrl, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(30_000) });
     if (!response.ok) {
         throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
     const data = await response.json();
-    return Array.isArray(data) ? data : [];
+    if (!Array.isArray(data)) {
+        throw new Error(`Unexpected Lever response (not an array): ${JSON.stringify(data).slice(0, 200)}`);
+    }
+    return data;
+}
+
+/** Normalize a date to ISO 8601, or null if missing/invalid (never throws). */
+function toIso(s) {
+    if (!s) return null;
+    const t = Date.parse(s);
+    return Number.isNaN(t) ? null : new Date(t).toISOString();
 }
 
 /**
@@ -55,9 +65,9 @@ function parseSalaryFromText(text) {
     if (!salaryMatch) return null;
 
     const parseAmount = (str) => {
-        const cleaned = str.replace(/,/g, '');
-        const num = parseInt(cleaned, 10);
-        return str.match(/[kK]/) || num < 1000 ? num * 1000 : num;
+        const num = parseInt(str.replace(/,/g, ''), 10);
+        // Only scale by 1000 when the matched token actually carries a 'k'.
+        return /[kK]/.test(str) ? num * 1000 : num;
     };
 
     let currency = salaryMatch[1] === '£' ? 'GBP' : salaryMatch[1] === '€' ? 'EUR' : 'USD';
@@ -74,6 +84,7 @@ function parseSalaryFromText(text) {
         min: parseAmount(salaryMatch[2]),
         max: parseAmount(salaryMatch[3]),
         currency,
+        interval: null,
         raw: salaryMatch[0],
     };
 }
@@ -87,15 +98,15 @@ function extractSalary(posting) {
     const sr = posting.salaryRange;
     if (sr && (sr.min != null || sr.max != null)) {
         return {
-            min: sr.min ?? null,
-            max: sr.max ?? null,
+            min: sr.min != null ? Number(sr.min) : null,
+            max: sr.max != null ? Number(sr.max) : null,
             currency: sr.currency || 'USD',
             interval: sr.interval || null,
             raw: `${sr.currency || ''}${sr.min ?? ''}-${sr.max ?? ''}`.trim(),
         };
     }
-    // No structured range: parse the dedicated salary blurb first, then the description.
-    return parseSalaryFromText(posting.salaryDescriptionPlain || posting.descriptionPlain || posting.description || '');
+    // No structured range: parse the dedicated salary blurb or plain-text description (never raw HTML).
+    return parseSalaryFromText(posting.salaryDescriptionPlain || posting.descriptionPlain || '');
 }
 
 /**
@@ -146,7 +157,7 @@ function formatJobOutput(posting, site) {
 
         postingUrl: posting.hostedUrl || `https://jobs.lever.co/${site}/${posting.id}`,
         applyUrl: posting.applyUrl || `${posting.hostedUrl || `https://jobs.lever.co/${site}/${posting.id}`}/apply`,
-        publishedAt: posting.createdAt ? new Date(posting.createdAt).toISOString() : null,
+        publishedAt: toIso(posting.createdAt),
     };
 }
 
@@ -159,6 +170,7 @@ await Actor.main(async () => {
     }
 
     let totalProcessed = 0;
+    let boardErrors = 0;
 
     for (const urlConfig of urls) {
         const url = typeof urlConfig === 'string' ? urlConfig : urlConfig.url;
@@ -170,15 +182,19 @@ await Actor.main(async () => {
         const site = extractCompanyName(url);
         if (!site) {
             console.log(`⚠️  Invalid Lever URL: ${url} (expected https://jobs.lever.co/company-name)`);
+            boardErrors++;
             continue;
         }
 
         // Compute date cutoff once per board. Lever exposes createdAt only, so daysBack
         // means "jobs created in the last N days" — ideal for incremental scheduled runs.
         let cutoffDate = null;
-        if (daysBack && Number.isInteger(daysBack) && daysBack > 0) {
-            cutoffDate = new Date();
-            cutoffDate.setDate(cutoffDate.getDate() - daysBack);
+        if (daysBack !== null && daysBack !== undefined) {
+            const days = parseInt(daysBack, 10); // coerce so a stringified "7" still works
+            if (Number.isInteger(days) && days > 0) {
+                cutoffDate = new Date();
+                cutoffDate.setDate(cutoffDate.getDate() - days);
+            }
         }
 
         console.log(`\n📋 Scraping: ${site}`);
@@ -201,8 +217,9 @@ await Actor.main(async () => {
                 if (!passesFilter(categories.department, departments)) continue;
                 if (!passesFilter(categories.team, teams)) continue;
 
-                if (cutoffDate && posting.createdAt) {
-                    if (new Date(posting.createdAt) < cutoffDate) continue;
+                if (cutoffDate) {
+                    const t = posting.createdAt ? Date.parse(posting.createdAt) : NaN;
+                    if (Number.isNaN(t) || t < cutoffDate.getTime()) continue; // drop undated/old jobs
                 }
 
                 boardResults.push(formatJobOutput(posting, site));
@@ -219,11 +236,17 @@ await Actor.main(async () => {
             }
             console.log(`   ✅ Stored ${boardResults.length} job(s) after filtering`);
         } catch (error) {
+            boardErrors++;
             console.log(`   ❌ Error scraping ${site}: ${error.message}`);
         }
 
         // Small delay to be polite to the API between boards.
         await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    // Surface total failure: if every board errored and nothing was stored, fail the run.
+    if (boardErrors > 0 && totalProcessed === 0) {
+        throw new Error(`All ${boardErrors} board(s) failed and no jobs were stored.`);
     }
 
     console.log(`\n✅ Scraping complete! Stored ${totalProcessed} job(s) from ${urls.length} board(s).`);

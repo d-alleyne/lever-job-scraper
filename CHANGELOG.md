@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.1
+
+- Salary parser no longer multiplies bare sub-1000 numbers by 1000; the ×1000 scaling applies only when the amount carries a `k`.
+- Salary object always includes `interval` (null on the regex path) and coerces structured `min`/`max` to numbers, for a stable shape.
+- Salary regex reads the plain-text salary blurb or plain description only, never raw HTML.
+- `daysBack` excludes jobs with a missing or invalid `createdAt`, and accepts a stringified value (e.g. `"7"`).
+- `publishedAt` is guarded against invalid dates instead of throwing and aborting the board.
+- Non-array API responses raise a clear error instead of silently looking like an empty board.
+- All requests have a 30-second timeout; the run fails if every board errors and nothing is stored.
+
 ## 1.1.0
 
 - Capture Lever's free-text compensation field as `salaryDescription` (`salaryDescriptionPlain`), preserved verbatim for salary-transparency listings.
