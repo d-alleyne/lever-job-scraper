@@ -1,6 +1,6 @@
 {
   "name": "lever-job-scraper",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Open source Lever Job Scraper with department, team, and recency filtering",
   "type": "module",
   "main": "src/main.js",

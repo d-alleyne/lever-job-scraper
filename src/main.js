@@ -124,7 +124,8 @@ function formatJobOutput(posting, site) {
         : (locationRaw ? [locationRaw] : []);
 
     const workplaceType = posting.workplaceType || null; // 'remote' | 'on-site' | 'hybrid' | 'unspecified'
-    const haystack = `${workplaceType || ''} ${locations.join(' ')}`.toLowerCase();
+    // Lever often encodes the work model in `commitment` (e.g. "Full-Time - Hybrid"), so include it.
+    const haystack = `${workplaceType || ''} ${categories.commitment || ''} ${locations.join(' ')}`.toLowerCase();
     const isRemote = workplaceType === 'remote' || haystack.includes('remote');
     const isHybrid = workplaceType === 'hybrid' || haystack.includes('hybrid');
 

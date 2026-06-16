@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+- Work model (`isRemote`/`isHybrid`) now also reads Lever's `commitment` field (e.g. "Full-Time - Hybrid"), not just `workplaceType` and location, for more accurate remote/hybrid classification.
+
 ## 1.1.1
 
 - Salary parser no longer multiplies bare sub-1000 numbers by 1000; the ×1000 scaling applies only when the amount carries a `k`.
